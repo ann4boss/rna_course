@@ -7,7 +7,7 @@
 #SBATCH --job-name=linkfiles
 #SBATCH --mail-user=anna.boss@students.unibe.ch
 #SBATCH --mail-type=fail
-#SBATCH --error=/data/users/aboss/rna_course/error_fastq_%A_%a.e
+#SBATCH --error=/data/users/aboss/rna_course/error_file_links_%A_%a.e
 
 #Reads source directory
 SOURCE_DIR="/data/courses/rnaseq_course/breastcancer_de/reads"
