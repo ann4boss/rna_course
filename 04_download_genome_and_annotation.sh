@@ -66,3 +66,8 @@ else
 fi
 
 echo "All files downloaded and verified successfully."
+
+
+###-----unzip the file------
+gunzip -k ${REFERENCE_GENOME_FILE}
+gunzip -k ${ANNOTATION_FILE}
