@@ -11,17 +11,17 @@
 
 
 # Directory with reference genome
-REFERENCE_GENOME_DIR="/data/users/aboss/rna_course/reference_genome"
+REFERENCE_GENOME_DIR=/data/users/aboss/rna_course/reference_genome
 # output directory for indexed ref genome
-HISAT2_INDEX="${REFERENCE_GENOME_DIR}/indexing/Homo_sapiens.GRCh38_indexed"
+HISAT2_INDEX=${REFERENCE_GENOME_DIR}/indexing/Homo_sapiens.GRCh38_indexed
 mkdir -p ${REFERENCE_GENOME_DIR}/indexing/
 # apptainer paths
-APPTAINER="/containers/apptainer/hisat2_samtools_408dfd02f175cd88.sif"
+APPTAINER=/containers/apptainer/hisat2_samtools_408dfd02f175cd88.sif
 
 
 ###------------file preparation for HISAT2 - indexing---------------------
 # input fasta file
-GENOME_FA="${REFERENCE_GENOME_DIR}/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz"
+GENOME_FA=${REFERENCE_GENOME_DIR}/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
 
 # indexing, using --verbose to get updates
 apptainer exec --bind ${REFERENCE_GENOME_DIR} ${APPTAINER} hisat2-build --verbose ${GENOME_FA} ${HISAT2_INDEX}
