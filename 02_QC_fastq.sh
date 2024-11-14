@@ -10,7 +10,7 @@
 #SBATCH --error=/data/users/aboss/rna_course/error_fastq_%A_%a.e
 
 
-# Directory with soft link to RNA-seq paired-end reads (try with readycopy)
+# Directory with soft link to RNA-seq paired-end reads (-> link not workin, tried with readycopy)
 READS_DIR="/data/users/aboss/rna_course/readscopy"
 mkdir -p ${READS_DIR}
 # Directory for FastQC output    
