@@ -24,7 +24,7 @@ BASENAME='Homo_sapiens.GRCh38_indexed'
 HISAT2_INDEX=${REFERENCE_GENOME_DIR}/indexing/${BASENAME}
 # SAMPLES
 #SAMPLES=("HER21" "HER22" "HER23" "NonTNBC1" "NonTNBC2" "NonTNBC3" "Normal1" "Normal2" "Normal3" "TNBC1" "TNBC2" "TNBC3")
-SAMPLES=("HER21")
+SAMPLES=("NonTNBC1")
 # Apptainer paths
 APPTAINER=/containers/apptainer/hisat2_samtools_408dfd02f175cd88.sif
 
@@ -49,9 +49,12 @@ for SAMPLE in "${SAMPLES[@]}"; do
         bash -c "
         hisat2 -x ${HISAT2_INDEX} -1 ${READ1} -2 ${READ2} | \
         samtools view -b - | \
-        samtools sort -o '${PROCESSED_BAM_DIR}/${SAMPLE}_aligned.sorted.bam' - && \
-        samtools index '${PROCESSED_BAM_DIR}/${SAMPLE}_aligned.sorted.bam'
-        " 2> "${OUTPUT_DIR}/${SAMPLE}_mapping.log"
+        samtools sort -o ${PROCESSED_BAM_DIR}/${SAMPLE}_aligned.sorted.bam - && \
+        samtools index ${PROCESSED_BAM_DIR}/${SAMPLE}_aligned.sorted.bam
+        " 2> ${OUTPUT_DIR}/${SAMPLE}_mapping.log
+    else
+        echo "Warning: One or both read files for ${SAMPLE} are missing. Skipping this sample."
+    fi
 done
 
 echo "mapping completed for all Samples."
