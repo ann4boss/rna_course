@@ -9,7 +9,8 @@
 #SBATCH --mail-type=fail
 #SBATCH --error=/data/users/aboss/rna_course/error_countread_%A_%a.e
 
-
+# woorking directory
+WORK_DIR=/data/users/aboss/rna_course/
 # Directory containing the processed BAM files
 BAM_DIR=/data/users/aboss/rna_course/mapping_results/processed_bam_files
 # Annotation file path (e.g., GTF file)
@@ -19,14 +20,14 @@ OUTPUT_DIR=/data/users/aboss/rna_course/featureCounts_results
 mkdir -p ${OUTPUT_DIR}
 OUTPUT_FILE=${OUTPUT_DIR}/gene_counts.txt
 # Apptainer paths
-APPTAINER=/containers/apptainer/subread_2.0.1-hed695b0_0.sif
+APPTAINER=/containers/apptainer/subread_2.0.1--hed695b0_0.sif
 
 
 # List all BAM files in the BAM directory
 BAM_FILES=(${BAM_DIR}/*.bam)
 
 # Run featureCounts using Apptainer
-apptainer exec --bind ${BAM_DIR} --bind ${OUTPUT_DIR} --bind $(dirname ${ANNOTATION_FILE}) ${APPTAINER_CONTAINER} \
+apptainer exec --bind ${WORK_DIR} ${APPTAINER} \
     featureCounts -T 4 \
                   -a ${ANNOTATION_FILE} \
                   -o ${OUTPUT_FILE} \

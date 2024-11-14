@@ -12,7 +12,7 @@
 #Reads source directory
 SOURCE_DIR="/data/courses/rnaseq_course/breastcancer_de/reads"
 # Define the directory containing the soft link to RNA-seq reads
-READS_DIR="/data/users/aboss/rna_course/reads"
+READS_DIR="/data/users/aboss/rna_course/01_reads"
 mkdir -p ${READS_DIR}
 # samples
 SAMPLES=("HER21" "HER22" "HER23" "NonTNBC1" "NonTNBC2" "NonTNBC3" "Normal1" "Normal2" "Normal3" "TNBC1" "TNBC2" "TNBC3")

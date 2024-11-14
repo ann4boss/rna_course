@@ -24,7 +24,7 @@ ANNOTATION_FILE="${SPECIES^}.${ASSEMBLY}.${BUILD}.gtf.gz"
 CHECKSUMS_FILE="CHECKSUMS"
 
 # Directory for downloaded files
-DOWNLOAD_DIR="/data/users/aboss/rna_course/reference_genome" 
+DOWNLOAD_DIR="/data/users/aboss/rna_course/04_reference_genome" 
 mkdir -p "${DOWNLOAD_DIR}"
 # Move to the download directory
 cd "${DOWNLOAD_DIR}"
