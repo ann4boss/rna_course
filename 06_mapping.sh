@@ -33,11 +33,11 @@ APPTAINER=/containers/apptainer/hisat2_samtools_408dfd02f175cd88.sif
 #---------Mapping with HISAT2 and Post-Processing (SAM to BAM, Sort, Index)-----------------
 # Loop through each sample
 for SAMPLE in "${SAMPLES[@]}"; do
-    # R1 and R2 read files based on the sample
+    # R1 and R2 read files
     READ1="${READS_DIR}/${SAMPLE}_R1.fastq.gz"
     READ2="${READS_DIR}/${SAMPLE}_R2.fastq.gz"
     
-    # Check if both READ1 and READ2 files exist
+    # Check if both READ1 and READ2 files exist - could be deleted
     if [[ -e "${READ1}" && -e "${READ2}" ]]; then
         echo "Running HISAT2 mapping for SAMPLE: ${SAMPLE}"
         
@@ -48,28 +48,13 @@ for SAMPLE in "${SAMPLES[@]}"; do
         #apptainer exec --bind ${REFERENCE_GENOME_DIR} ${APPTAINER} hisat2 -x ${HISAT2_INDEX} -1 ${READ1} -2 ${READ2} -S ${SAM_OUTPUT}
         apptainer exec --bind ${REFERENCE_GENOME_DIR} ${APPTAINER} hisat2 -x ${HISAT2_INDEX} -1 ${READ1} -2 ${READ2} -S ${SAM_OUTPUT} 2> "${OUTPUT_DIR}/${SAMPLE}_hisat2.log"
 
-        # Check if HISAT2 was successful
-        if [[ $? -eq 0 ]]; then
-            echo "HISAT2 mapping completed for ${SAMPLE}. Now converting to BAM format, sorting, and indexing."
+    # Check if HISAT2 was successful
+    if [[ $? -eq 0 ]]; then
+        echo "HISAT2 mapping completed for ${SAMPLE}."
 
-            # Convert SAM to BAM, sort, and index using Samtools
-            # Convert SAM to BAM
-            apptainer exec ${APPTAINER} samtools view -Sb "${SAM_OUTPUT}" > "${PROCESSED_BAM_DIR}/${SAMPLE}_aligned.bam"
-            # Sort the BAM file by genomic coordinates
-            apptainer exec ${APPTAINER} samtools sort "${PROCESSED_BAM_DIR}/${SAMPLE}_aligned.bam" -o "${PROCESSED_BAM_DIR}/${SAMPLE}_aligned.sorted.bam"
-            # Index the sorted BAM file
-            apptainer exec ${APPTAINER} samtools index "${PROCESSED_BAM_DIR}/${SAMPLE}_aligned.sorted.bam"
-            # Remove the intermediate unsorted BAM file to save space
-            rm "${PROCESSED_BAM_DIR}/${SAMPLE}_aligned.bam"
-
-            echo "BAM file sorted and indexed for ${SAMPLE}."
-        else
-            echo "Error running HISAT2 for ${SAMPLE}. Skipping BAM conversion and sorting."
-        fi
     else
-        # If either READ1 or READ2 file is missing, print a warning
-        echo "Missing files for SAMPLE: ${SAMPLE}. Skipping HISAT2 mapping."
+        echo "Error running HISAT2 for ${SAMPLE}."
     fi
 done
 
-echo "HISAT2 mapping, BAM conversion, sorting, and indexing completed for all SAMPLES."
+echo "HISAT2 mapping completed for all SAMPLES."
