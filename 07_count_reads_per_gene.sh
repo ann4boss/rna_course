@@ -9,7 +9,7 @@
 #SBATCH --mail-type=fail
 #SBATCH --error=/data/users/aboss/rna_course/error_countread_%A_%a.e
 
-# woorking directory
+# Working directory
 WORK_DIR=/data/users/aboss/rna_course/
 # Directory containing the processed BAM files
 BAM_DIR=/data/users/aboss/rna_course/mapping_results/processed_bam_files

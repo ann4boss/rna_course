@@ -57,4 +57,4 @@ for SAMPLE in "${SAMPLES[@]}"; do
     fi
 done
 
-echo "mapping completed for all Samples."
+echo "Mapping completed for all Samples."
