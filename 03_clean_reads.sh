@@ -1,55 +1,59 @@
 #!/bin/bash
 
-#SBATCH --cpus-per-task=1
-#SBATCH --mem=1000
-#SBATCH --time=01:00:00
-#SBATCH --partition=pibu_el8
-#SBATCH --job-name=cleaning
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=8000
+#SBATCH --time=1:00:00
+#SBATCH --job-name=fastp_cleaning
 #SBATCH --mail-user=anna.boss@students.unibe.ch
 #SBATCH --mail-type=fail
 #SBATCH --error=/data/users/aboss/rna_course/error_cleaning_%A_%a.e
+#SBATCH --output=/data/users/aboss/rna_course/output_cleaning_%A_%a.o
+#SBATCH --array=0-11
+#SBATCH --ntasks=1
+#SBATCH --partition=pcoursea
 
 
-# Directory with soft link to RNA-seq paired-end reads (-> link not workin, tried with readycopy)
-READS_DIR="/data/users/aboss/rna_course/readscopy"
-mkdir -p ${READS_DIR}
+# Directory with soft link to RNA-seq paired-end reads (-> link not working, tried with readycopy)
+READS_DIR=/data/users/aboss/rna_course/readscopy
 # Directory for FastQC output    
-OUTPUT_DIR="/data/users/aboss/rna_course/03_cleaning_results"
+OUTPUT_DIR=/data/users/aboss/rna_course/03_cleaning_results
 mkdir -p ${OUTPUT_DIR}
-# samples
+# Path to uncleaned fastqc files
+UNCLEANED_FASTQC=/data/users/aboss/rna_course/02_fastqc_results
+# Samples
 SAMPLES=("HER21" "HER22" "HER23" "NonTNBC1" "NonTNBC2" "NonTNBC3" "Normal1" "Normal2" "Normal3" "TNBC1" "TNBC2" "TNBC3")
 # apptainer paths
-APPTAINER_fastP="/containers/apptainer/fastp_0.23.2--h5f740d0_3.sif"
-APPTAINER_multiqc="/containers/apptainer/multiqc-1.19.sif"
+APPTAINER_fastp=/containers/apptainer/fastp_0.23.2--h5f740d0_3.sif
+APPTAINER_multiqc=/containers/apptainer/multiqc-1.19.sif
+APPTAINER_fastqc=/containers/apptainer/fastqc-0.12.1.sif
+
+# Get the sample for the current job array index
+SAMPLE=${SAMPLES[$SLURM_ARRAY_TASK_ID]}
+READ1="${READS_DIR}/${SAMPLE}_R1.fastq.gz"
+READ2="${READS_DIR}/${SAMPLE}_R2.fastq.gz"
+
+# Run fastp for cleaning
+echo "Running fastp for sample: ${SAMPLE}"
+apptainer exec --bind ${READS_DIR},${OUTPUT_DIR} ${APPTAINER_fastp} \
+    fastp \
+    -i ${READ1} -I ${READ2} \
+    -o ${OUTPUT_DIR}/${SAMPLE}_cleaned_R1.fastq.gz -O ${OUTPUT_DIR}/${SAMPLE}_cleaned_R2.fastq.gz \
+    -j 4 \
+    --detect_adapter_for_pe \
+    --low_complexity_filter \
+    --complexity_threshold 30 \
+    --overrepresentation_analysis \
+    --qualified_quality_phred 15 \
+    --unqualified_percent_limit 40 \
+    --correction \
+    --html ${OUTPUT_DIR}/${SAMPLE}_report.html
 
 
-##----need to change this code!!!
-# Loop through all SAMPLES
-for SAMPLE in "${SAMPLES[@]}"; do
-    # Define the R1 and R2 read files based on the sample
-    READ1="${READS_DIR}/${SAMPLE}_R1.fastq.gz"
-    READ2="${READS_DIR}/${SAMPLE}_R2.fastq.gz"
-    
-    # Check if both READ1 and READ2 files exist
-    if [[ -e "${READ1}" && -e "${READ2}" ]]; then
-        echo "Running FastP for Sample: ${SAMPLE}"
-        
-        # Run FastQC using Apptainer
-        apptainer exec ${APPTAINER_fastqc} fastqc -o ${OUTPUT_DIR} ${READ1} ${READ2}
-        
-        # Check if FastQC was successful
-        if [[ $? -eq 0 ]]; then
-            echo "FastQC completed for ${SAMPLE}."
-        else
-            echo "Error running FastQC for ${SAMPLE}."
-        fi
-    else
-        # If either READ1 or READ2 file is missing, print a warning
-        echo "Missing files for SAMPLE: ${SAMPLE}. Skipping FastQC."
-    fi
-done
+# Run FastQC on cleaned reads
+echo "Running FastQC for cleaned reads of sample: ${SAMPLE}"
+apptainer exec --bind ${OUTPUT_DIR} ${APPTAINER_fastqc} fastqc -o ${OUTPUT_DIR} ${OUTPUT_DIR}/${SAMPLE}_cleaned_R1.fastq.gz ${OUTPUT_DIR}/${SAMPLE}_cleaned_R2.fastq.gz
 
 
-#-------------------------MultiQC-----------------------------------------------------
-#run multiQC for all fastqc files to compare ussing Apptainer
-apptainer exec ${APPTAINER_multiqc} multiqc ${OUTPUT_DIR} -o ${OUTPUT_DIR}
+# this needs to change otherwise it runs for each array!!
+# Run MultiQC for all FastQC results
+apptainer exec --bind ${OUTPUT_DIR},${UNCLEANED_FASTQC} ${APPTAINER_multiqc} multiqc ${OUTPUT_DIR} -o ${OUTPUT_DIR}
