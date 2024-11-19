@@ -32,8 +32,8 @@ for SAMPLE in "${SAMPLES[@]}"; do
     if [[ -e "${READ1}" && -e "${READ2}" ]]; then
         echo "Running FastQC for Sample: ${SAMPLE}"
         
-        # Run FastQC using Apptainer
-        apptainer exec ${APPTAINER_fastqc} fastqc -o ${OUTPUT_DIR} ${READ1} ${READ2}
+        # Run FastQC using Apptainer, -t 2 for speeding up process (2 threads)
+        apptainer exec ${APPTAINER_fastqc} fastqc -t 2 -o ${OUTPUT_DIR} ${READ1} ${READ2}
         
         # Check if FastQC was successful
         if [[ $? -eq 0 ]]; then
