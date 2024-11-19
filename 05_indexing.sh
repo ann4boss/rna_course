@@ -11,11 +11,11 @@
 
 
 # Directory with reference genome
-REFERENCE_GENOME_DIR=/data/users/aboss/rna_course/reference_genome
+REFERENCE_GENOME_DIR=/data/users/aboss/rna_course/04_reference_genome
 # output directory for indexed ref genome
 BASENAME='Homo_sapiens.GRCh38_indexed'
-HISAT2_INDEX=${REFERENCE_GENOME_DIR}/indexing/${BASENAME}
-mkdir -p ${REFERENCE_GENOME_DIR}/indexing/
+HISAT2_INDEX=/data/users/aboss/rna_course/05_indexing/${BASENAME}
+mkdir -p /data/users/aboss/rna_course/05_indexing/
 # apptainer paths
 APPTAINER=/containers/apptainer/hisat2_samtools_408dfd02f175cd88.sif
 
