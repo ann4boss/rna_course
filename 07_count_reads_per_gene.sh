@@ -2,12 +2,12 @@
 
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=4000
-#SBATCH --time=01:00:00
-#SBATCH --partition=pibu_el8
+#SBATCH --time=13:00:00
 #SBATCH --job-name=count_read_per_gene
 #SBATCH --mail-user=anna.boss@students.unibe.ch
 #SBATCH --mail-type=fail
 #SBATCH --error=/data/users/aboss/rna_course/error_countread_%A_%a.e
+#SBATCH --partition=pcoursea
 
 # Working directory
 WORK_DIR=/data/users/aboss/rna_course/
