@@ -44,7 +44,10 @@ apptainer exec --bind ${READS_DIR},${OUTPUT_DIR} ${APPTAINER_fastp} \
     --complexity_threshold 30 \
     --overrepresentation_analysis \
     --qualified_quality_phred 15 \
+    --cut_by_quality3 -q 20 \
     --unqualified_percent_limit 40 \
+    --length_required 50 \
+    --n_base_limit 1 \
     --correction \
     --html ${OUTPUT_DIR}/${SAMPLE}_report.html
 
@@ -54,6 +57,6 @@ echo "Running FastQC for cleaned reads of sample: ${SAMPLE}"
 apptainer exec --bind ${OUTPUT_DIR} ${APPTAINER_fastqc} fastqc -o ${OUTPUT_DIR} ${OUTPUT_DIR}/${SAMPLE}_cleaned_R1.fastq.gz ${OUTPUT_DIR}/${SAMPLE}_cleaned_R2.fastq.gz
 
 
-# this needs to change otherwise it runs for each array!!
+# this needs to change otherwise it runs for each array!! -> create separate script
 # Run MultiQC for all FastQC results
 apptainer exec --bind ${OUTPUT_DIR},${UNCLEANED_FASTQC} ${APPTAINER_multiqc} multiqc ${OUTPUT_DIR} -o ${OUTPUT_DIR}
