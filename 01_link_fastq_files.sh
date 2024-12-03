@@ -10,15 +10,14 @@
 #SBATCH --error=/data/users/aboss/rna_course/error_file_links_%A_%a.e
 
 #Reads source directory
-SOURCE_DIR="/data/courses/rnaseq_course/breastcancer_de/reads"
+SOURCE_DIR=/data/courses/rnaseq_course/breastcancer_de/reads
 # Define the directory containing the soft link to RNA-seq reads
-READS_DIR="/data/users/aboss/rna_course/01_reads"
+READS_DIR=./data/01_reads
 mkdir -p ${READS_DIR}
 # samples
 SAMPLES=("HER21" "HER22" "HER23" "NonTNBC1" "NonTNBC2" "NonTNBC3" "Normal1" "Normal2" "Normal3" "TNBC1" "TNBC2" "TNBC3")
 
-# link to reads
-# Loop through each sample
+# Create link to reads in READS_DIR, Loop through each sample
 for SAMPLE in "${SAMPLES[@]}"; do
     # Define the R1 and R2 file paths
     R1_FILE="${SAMPLE}_R1.fastq.gz"
