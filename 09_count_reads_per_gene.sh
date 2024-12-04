@@ -34,7 +34,6 @@ apptainer exec --bind ${WORK_DIR} ${APPTAINER} \
                   -g gene_id \
                   -t exon \
                   -p \
-                  -s 1 \
                   "${BAM_FILES[@]}"
 
 echo "featureCounts completed. Output saved to ${OUTPUT_FILE}"

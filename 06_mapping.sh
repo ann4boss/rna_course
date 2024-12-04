@@ -39,7 +39,7 @@ BAM_OUTPUT="${OUTPUT_DIR}/${SAMPLE}_aligned.sorted.bam"
     
 # Run HISAT2 (for aligning) and samtools (for converting to BAM, sorting, and indexing) using Apptainer
 apptainer exec --bind ${REFERENCE_GENOME_DIR} --bind ${READS_DIR} --bind ${OUTPUT_DIR} ${APPTAINER} bash -c "
-hisat2 --rna-strandness FR -x ${HISAT2_INDEX} -1 ${READ1} -2 ${READ2} | \
+hisat2 -x ${HISAT2_INDEX} -1 ${READ1} -2 ${READ2} | \
 samtools view -b - | \
 samtools sort -o ${BAM_OUTPUT} - && \
 samtools index ${BAM_OUTPUT} && \
