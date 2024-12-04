@@ -11,16 +11,16 @@
 
 
 # Directory with soft link to RNA-seq paired-end reads ###(-> link not working, tried with readycopy)###
-READS_DIR="/data/users/aboss/rna_course/readscopy"
+READS_DIR=./data/01_reads
 mkdir -p ${READS_DIR}
 # Directory for FastQC output    
-OUTPUT_DIR="/data/users/aboss/rna_course/02_fastqc_results"
+OUTPUT_DIR=./results/01_fastqc_results
 mkdir -p ${OUTPUT_DIR}
 # samples
 SAMPLES=("HER21" "HER22" "HER23" "NonTNBC1" "NonTNBC2" "NonTNBC3" "Normal1" "Normal2" "Normal3" "TNBC1" "TNBC2" "TNBC3")
 # apptainer paths
-APPTAINER_fastqc="/containers/apptainer/fastqc-0.12.1.sif"
-APPTAINER_multiqc="/containers/apptainer/multiqc-1.19.sif"
+APPTAINER_fastqc=/containers/apptainer/fastqc-0.12.1.sif
+APPTAINER_multiqc=/containers/apptainer/multiqc-1.19.sif
 
 # Loop through all Samples
 for SAMPLE in "${SAMPLES[@]}"; do
@@ -46,11 +46,6 @@ for SAMPLE in "${SAMPLES[@]}"; do
         echo "Missing files for Sample: ${SAMPLE}. Skipping FastQC."
     fi
 done
-
-
-#-------------------------MultiQC-----------------------------------------------------
-#run multiQC for all fastqc files to compare ussing Apptainer
-#apptainer exec ${APPTAINER_multiqc} multiqc ${OUTPUT_DIR} -o ${OUTPUT_DIR}
 
 
 
