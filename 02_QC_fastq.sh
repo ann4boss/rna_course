@@ -14,7 +14,7 @@
 READS_DIR=./data/01_reads
 mkdir -p ${READS_DIR}
 # Directory for FastQC output    
-OUTPUT_DIR=./results/01_fastqc_results
+OUTPUT_DIR=./analysis/01_fastqc_results
 mkdir -p ${OUTPUT_DIR}
 # samples
 SAMPLES=("HER21" "HER22" "HER23" "NonTNBC1" "NonTNBC2" "NonTNBC3" "Normal1" "Normal2" "Normal3" "TNBC1" "TNBC2" "TNBC3")
