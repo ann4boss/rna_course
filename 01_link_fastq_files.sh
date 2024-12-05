@@ -3,11 +3,11 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=1000
 #SBATCH --time=0:30:00
-#SBATCH --partition=pibu_el8
 #SBATCH --job-name=linkfiles
 #SBATCH --mail-user=anna.boss@students.unibe.ch
 #SBATCH --mail-type=fail
 #SBATCH --error=/data/users/aboss/rna_course/error_file_links_%A_%a.e
+#SBATCH --partition=pibu_el8
 
 #Reads source directory
 SOURCE_DIR=/data/courses/rnaseq_course/breastcancer_de/reads
