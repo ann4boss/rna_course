@@ -10,29 +10,51 @@
 #SBATCH --error=/data/users/aboss/rna_course/error_multiqc_%A_%a.e
 
 
-# Ensure the script stops on error
-set -euo pipefail
-
-# Check for correct usage
-if [[ $# -ne 2 ]]; then
-    echo "Usage: $0 <input_directory> <output_directory>"
+# Check if at least one input path and output path are provided
+if [ $# -lt 2 ]; then
+    echo "Usage: $0 <input_directory_1> [input_directory_2 ...] <output_directory>"
     exit 1
 fi
 
-# Directory with soft links to RNA-seq paired-end reads
-INPUT_DIR=$1
-mkdir -p "${INPUT_DIR}"
+# Extract the output directory (the last argument)
+OUTPUT_DIR=${@: -1}
+# Ensure the output directory is an absolute path
+OUTPUT_DIR=$(realpath "$OUTPUT_DIR")
+mkdir -p ${OUTPUT_DIR}
 
-# Directory for FastQC output
-OUTPUT_DIR=$2
-mkdir -p "${OUTPUT_DIR}"
+# Extract input directories (all arguments except the last one)
+INPUT_DIRS=("${@:1:$#-1}")
 
-# Samples
-SAMPLES=("HER21" "HER22" "HER23" "NonTNBC1" "NonTNBC2" "NonTNBC3" "Normal1" "Normal2" "Normal3" "TNBC1" "TNBC2" "TNBC3")
+# Ensure all input directories are absolute paths
+for i in "${!INPUT_DIRS[@]}"; do
+    INPUT_DIRS[$i]=$(realpath "${INPUT_DIRS[$i]}")
+done
+
+# Create the input directories if they don't exist
+for INPUT_DIR in ${INPUT_DIRS[@]}; do
+    if [ ! -d "$INPUT_DIR" ]; then
+        echo "Warning: Input directory $INPUT_DIR does not exist. Skipping."
+    else
+        mkdir -p "$INPUT_DIR"
+    fi
+done
 
 # Apptainer paths
-APPTAINER_MULTIQC="/containers/apptainer/multiqc-1.19.sif"
+APPTAINER_multiqc="/containers/apptainer/multiqc-1.19.sif"
 
 #-------------------------MultiQC-----------------------------------------------------
-# Run MultiQC for all FastQC files to compare using Apptainer
-apptainer exec --bind ${INPUT_DIR} ${APPTAINER_MULTIQC} multiqc ${OUTPUT_DIR} -o ${OUTPUT_DIR}
+# Debugging: Print input directories and files
+echo "Input directories: ${INPUT_DIRS[@]}"
+for DIR in "${INPUT_DIRS[@]}"; do
+    echo "Listing files in ${DIR}:"
+    ls -l ${DIR}
+done
+
+# Run MultiQC for all input directories together and generate a single report
+INPUT_PATHS="${INPUT_DIRS[@]}"  # Concatenate all input paths into a single string
+echo "${INPUT_PATHS}"
+
+echo "Running MultiQC for all input directories..."
+apptainer exec --bind ${INPUT_PATHS} ${APPTAINER_multiqc} multiqc ${INPUT_PATHS} -o ${OUTPUT_DIR}
+
+echo "MultiQC analysis complete. Results are in ${OUTPUT_DIR}"
