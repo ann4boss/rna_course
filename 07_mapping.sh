@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task=8
 #SBATCH --mem=32000
 #SBATCH --time=13:00:00
 #SBATCH --array=0-11
@@ -36,8 +36,14 @@ READ2="${READS_DIR}/${SAMPLE}_cleaned_R2.fastq.gz"
 BAM_OUTPUT="${OUTPUT_DIR}/${SAMPLE}_aligned.sorted.bam"
     
 # Run HISAT2 (for aligning) and samtools (for converting to BAM, sorting, and indexing) using apptainer
+# bash -c -> ensures that all commands within "" are as a single string inside the container
+# samtools view -h -F 4 -> excludes unmapped reads
+# grep -v -P '^@|KI' -> filters out unplaced/unlocalized contigs
+# samtools view -b -> converts the filtered output from SAM back into BAM format
 apptainer exec --bind ${REFERENCE_GENOME_DIR} --bind ${READS_DIR} --bind ${OUTPUT_DIR} ${APPTAINER} bash -c "
 hisat2 -x ${HISAT2_INDEX} -1 ${READ1} -2 ${READ2} | \
+samtools view -h -F 4 - | \
+grep -v -E '^(KI|GL)' | \
 samtools view -b - | \
 samtools sort -o ${BAM_OUTPUT} - && \
 samtools index ${BAM_OUTPUT} && \
