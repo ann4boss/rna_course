@@ -17,7 +17,7 @@ REFERENCE_GENOME_DIR=$(realpath ./data/02_reference_genome)
 BASENAME='Homo_sapiens.GRCh38_indexed'
 HISAT2_INDEX=./data/03_indexing/${BASENAME}
 mkdir -p ./data/03_indexing
-# apptainer paths
+# Apptainer paths
 APPTAINER=/containers/apptainer/hisat2_samtools_408dfd02f175cd88.sif
 
 

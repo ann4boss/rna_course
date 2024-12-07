@@ -11,3 +11,7 @@
 **Summary**: drop in quality towards the end of the reads, two peaks in per sequence quality score, high dublication rate, bias in GC content, presence of overrepresented sequences
 
 &rarr; reasons for the two peaks: adapter or primaer contamination - contaminated reads tend to have lower quality scores, low quality bases at reads end, multiple sequencing batches/ lanes, contaminant sequences from other organisms, heterogenous library preparation
+
+
+
+
