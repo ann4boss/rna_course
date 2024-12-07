@@ -7,7 +7,8 @@
 #SBATCH --job-name=multiqc
 #SBATCH --mail-user=anna.boss@students.unibe.ch
 #SBATCH --mail-type=fail
-#SBATCH --error=/data/users/aboss/rna_course/error_multiqc_%A_%a.e
+#SBATCH --error=./error_multiqc_%A_%a.e
+#SBATCH --output=./output_multiqc_%A_%a.o
 
 # Apptainer paths
 APPTAINER_multiqc=/containers/apptainer/multiqc-1.19.sif

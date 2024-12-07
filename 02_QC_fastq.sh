@@ -6,7 +6,8 @@
 #SBATCH --job-name=fastq
 #SBATCH --mail-user=anna.boss@students.unibe.ch
 #SBATCH --mail-type=fail
-#SBATCH --error=/data/users/aboss/rna_course/error_fastq_%A_%a.e
+#SBATCH --error=./error_fastq_%A_%a.e
+#SBATCH --output=./output_fastq_%A_%a.o
 #SBATCH --partition=pibu_el8
 
 
