@@ -1,17 +1,17 @@
 #!/bin/bash
 
-#SBATCH --cpus-per-task=1
-#SBATCH --mem=1000
-#SBATCH --time=01:00:00
-#SBATCH --partition=pibu_el8
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=4000
+#SBATCH --time=02:00:00
 #SBATCH --job-name=fastq
 #SBATCH --mail-user=anna.boss@students.unibe.ch
 #SBATCH --mail-type=fail
 #SBATCH --error=/data/users/aboss/rna_course/error_fastq_%A_%a.e
+#SBATCH --partition=pibu_el8
 
 
-# Directory with soft link to RNA-seq paired-end reads ###(-> link not working, tried with readycopy)###
-READS_DIR=./data/01_reads
+# Directory with RNA-seq paired-end reads copied from source
+READS_DIR=./data/01_reads_copy
 mkdir -p ${READS_DIR}
 # Directory for FastQC output    
 OUTPUT_DIR=./analysis/01_fastqc_results
@@ -20,7 +20,6 @@ mkdir -p ${OUTPUT_DIR}
 SAMPLES=("HER21" "HER22" "HER23" "NonTNBC1" "NonTNBC2" "NonTNBC3" "Normal1" "Normal2" "Normal3" "TNBC1" "TNBC2" "TNBC3")
 # apptainer paths
 APPTAINER_fastqc=/containers/apptainer/fastqc-0.12.1.sif
-APPTAINER_multiqc=/containers/apptainer/multiqc-1.19.sif
 
 # Loop through all Samples
 for SAMPLE in "${SAMPLES[@]}"; do
@@ -32,8 +31,8 @@ for SAMPLE in "${SAMPLES[@]}"; do
     if [[ -e "${READ1}" && -e "${READ2}" ]]; then
         echo "Running FastQC for Sample: ${SAMPLE}"
         
-        # Run FastQC using Apptainer, -t 2 for speeding up process (2 threads)
-        apptainer exec ${APPTAINER_fastqc} fastqc -t 2 -o ${OUTPUT_DIR} ${READ1} ${READ2}
+        # Run FastQC using Apptainer, -t 4 for speeding up process (4 threads)
+        apptainer exec ${APPTAINER_fastqc} fastqc -t 4 -o ${OUTPUT_DIR} ${READ1} ${READ2}
         
         # Check if FastQC was successful
         if [[ $? -eq 0 ]]; then
