@@ -13,16 +13,11 @@
 #SBATCH --partition=pibu_el8
 
 
-# Directory with soft link to RNA-seq paired-end reads (-> link not working, tried with readycopy)
-#READS_DIR=./data/01_reads
-#READS_DIR=./data/readscopy
-READS_DIR=$(realpath ./data/readscopy)
+# Directory with raw RNA-seq paired-end reads
+READS_DIR=$(realpath ./data/01_reads_copy)
 # Directory for FastP output    
-#OUTPUT_DIR=./analysis/02_cleaning_results
 mkdir -p ./analysis/02_cleaning_results
 OUTPUT_DIR=$(realpath ./analysis/02_cleaning_results)
-# Path to uncleaned fastqc files
-UNCLEANED_FASTQC=./analysis/01_fastqc_results
 # Samples
 SAMPLES=("HER21" "HER22" "HER23" "NonTNBC1" "NonTNBC2" "NonTNBC3" "Normal1" "Normal2" "Normal3" "TNBC1" "TNBC2" "TNBC3")
 # apptainer paths
@@ -40,7 +35,7 @@ apptainer exec --bind ${READS_DIR},${OUTPUT_DIR} ${APPTAINER_fastp} \
     fastp \
     -i ${READ1} -I ${READ2} \
     -o ${OUTPUT_DIR}/${SAMPLE}_cleaned_R1.fastq.gz -O ${OUTPUT_DIR}/${SAMPLE}_cleaned_R2.fastq.gz \
-    -j 4 \
+    -t 4 \
     --detect_adapter_for_pe \
     --low_complexity_filter \
     --complexity_threshold 30 \
