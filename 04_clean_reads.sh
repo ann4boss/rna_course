@@ -29,7 +29,18 @@ SAMPLE=${SAMPLES[$SLURM_ARRAY_TASK_ID]}
 READ1="${READS_DIR}/${SAMPLE}_R1.fastq.gz"
 READ2="${READS_DIR}/${SAMPLE}_R2.fastq.gz"
 
-# Run fastp for cleaning
+# Run fastp for cleaning with following settings:
+# detect_adapter_for_pe: Automatically detects and removes adapter sequences for paired-end reads
+# low_complexity_filter: Filters out reads with low complexity, such as repetitive genomic regions, Sequencing artifacts or errors, or Adapter contamination or other technical issues
+# complexity_threshold: Sets the threshold for low-complexity filtering, default 30% complexity
+# overrepresentation_analysis: Analyzes and reports overrepresented sequences, such as PCR duplicates or contaminants
+# qualified_quality_phred: Sets the Phred quality score threshold for base qualification (bases with quality < 15 are considered unqualified)
+# cut_tail -q 20: Trims low-quality bases from the tail of reads (quality < 20).
+# unqualified_percent_limit 40: Discards reads if more than 40% of their bases are unqualified (quality < 15).
+# length_required 50: Discards reads shorter than 50 bases after trimming -> minimizes ambiguity in mapping
+# n_base_limit 1: Discards reads with more than 1 ambiguous base (N)
+# dedup: Removes duplicate reads
+# correction: Enables base correction for overlapping regions in paired-end reads.
 echo "Running fastp for sample: ${SAMPLE}"
 apptainer exec --bind ${READS_DIR},${OUTPUT_DIR} ${APPTAINER_fastp} \
     fastp \

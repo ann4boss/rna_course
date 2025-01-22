@@ -27,7 +27,7 @@ APPTAINER=/containers/apptainer/hisat2_samtools_408dfd02f175cd88.sif
 GENOME_FA=${REFERENCE_GENOME_DIR}/Homo_sapiens.GRCh38.dna.primary_assembly.fa
 ANNOTATION_GTF=${REFERENCE_GENOME_DIR}/Homo_sapiens.GRCh38.113.gtf
 
-# Unzip the reference genome if not already unzipped
+# Unzip the reference genome and annotation file if not already unzipped
 if [ ! -f "$GENOME_FA" ]; then
     gunzip -c ${REFERENCE_GENOME_DIR}/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz > "$GENOME_FA"
 fi
