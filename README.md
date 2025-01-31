@@ -106,6 +106,7 @@ The results of the analysis are organized into the following directories:
   - PCA plots: To assess sample clustering.
   - DESeq2 results.
   - Volcano plots: Highlighting differentially expressed genes.
+  - Heatmaps of differently expressed genes.
   - GO enrichment analysis outputs.
 
 
