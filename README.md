@@ -1,5 +1,6 @@
 # RNA-Seq course University of Bern: RNA-Seq Analysis for Breast Cancer Study
 This repository contains the scripts used for the RNA-Seq analysis of breast cancer samples from the study by [Eswaran et al.](https://www.nature.com/articles/srep00264#Sec14). The corresponding FASTQ files for **selected** samples were obtained from the Gene Expression Omnibus (GEO) under accession number [GSE52194](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE52194) and were provided by Dr. Alexander Nater via the IBU cluster.
+Full report of this analysis can be found [here](https://github.com/ann4boss/rna_course/blob/main/RNASeq_Report_AnnaBoss.pdf).
 
 ## Prerequisites
 Ensure the following are available:
